@@ -1,0 +1,1338 @@
+/* Global Smooth Scroll & Hardware Acceleration Optimizations */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f7f6f0;
+  color: #1a1a1e;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #f7f6f0;
+  color: #1a1a1e;
+  text-rendering: optimizeSpeed;
+}
+
+/* GPU Hardware Acceleration for Fixed & Animated Layering */
+.navbar.fixed-top,
+.card,
+.modal,
+button,
+a {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+/* CRITICAL FIX: Force 100% White Text on Place Cards & Footer Regardless of Theme Overrides */
+html body .force-white-text,
+html body p.force-white-text,
+html body [data-theme="light"] .force-white-text,
+html body [data-theme="light"] p.force-white-text,
+html body [data-theme="dark"] .force-white-text,
+html body [data-theme="dark"] p.force-white-text,
+html body footer p,
+html body footer span,
+html body footer div,
+html body footer li,
+html body [data-theme="light"] footer p,
+html body [data-theme="light"] footer span,
+html body [data-theme="light"] footer div,
+html body [data-theme="light"] footer li,
+html body .site-footer p,
+html body .site-footer span,
+html body [data-theme="light"] .site-footer p,
+html body [data-theme="light"] .site-footer span,
+html body .place-card-title,
+html body [data-theme="light"] .place-card-title,
+html body [data-theme="dark"] .place-card-title,
+html body [data-theme="light"] h1.place-card-title,
+html body [data-theme="light"] h2.place-card-title,
+html body [data-theme="light"] h3.place-card-title,
+html body [data-theme="light"] h4.place-card-title,
+html body [data-theme="light"] h5.place-card-title,
+html body [data-theme="light"] h6.place-card-title,
+html body [data-theme="light"] h1.force-white-text,
+html body [data-theme="light"] h2.force-white-text,
+html body [data-theme="light"] h3.force-white-text,
+html body [data-theme="light"] h4.force-white-text,
+html body [data-theme="light"] h5.force-white-text,
+html body [data-theme="light"] h6.force-white-text,
+html body [data-theme="light"] div .force-white-text,
+html body [data-theme="light"] div .place-card-title,
+html body .place-card-state,
+html body [data-theme="light"] .place-card-state,
+html body [data-theme="dark"] .place-card-state {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Yellow text utility - for hero carousel temple name & subtitle */
+html body .yellow-text,
+html body span.yellow-text,
+html body p.yellow-text,
+html body .hero-carousel-container .yellow-text,
+html body .hero-carousel-container p.yellow-text,
+html body [data-theme="light"] .yellow-text,
+html body [data-theme="light"] span.yellow-text,
+html body [data-theme="light"] p.yellow-text,
+html body [data-theme="light"] .hero-carousel-container .yellow-text,
+html body [data-theme="light"] .hero-carousel-container p.yellow-text,
+html body [data-theme="dark"] .yellow-text,
+html body [data-theme="dark"] span.yellow-text,
+html body [data-theme="dark"] p.yellow-text,
+html body div.yellow-text,
+html body [data-theme="light"] div.yellow-text {
+  color: #facc15 !important;
+  -webkit-text-fill-color: #facc15 !important;
+}
+
+/* Smooth Image Loading */
+img {
+  content-visibility: auto;
+}
+
+/* Performance Mode for Motion Reduced Preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ====================================================== */
+/* COMPREHENSIVE LIGHT MODE THEME OVERRIDES (ALL PAGES) */
+/* ====================================================== */
+[data-theme="light"] html,
+[data-theme="light"] body {
+  background-color: #f7f6f0 !important;
+  color: #1a1a1e !important;
+}
+
+[data-theme="light"] main,
+[data-theme="light"] section,
+[data-theme="light"] [class*="stackedSection"],
+[data-theme="light"] div[class*="min-vh"] {
+  background-color: #f7f6f0 !important;
+  color: #1a1a1e !important;
+}
+
+[data-theme="light"] [class*="stackedSection"] h2 {
+  color: #111827 !important;
+}
+
+/* General Backgrounds */
+[data-theme="light"]
+  .bg-black:not([class*="deckCard"]):not([class*="cardContent"]),
+[data-theme="light"]
+  .bg-dark:not([class*="deckCard"]):not([class*="cardContent"]) {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border-color: rgba(217, 119, 6, 0.25) !important;
+}
+
+/* Glass & Card Containers (Non-Image Cards) */
+[data-theme="light"] .card:not([class*="deckCard"]),
+[data-theme="light"] [class*="glassCard"]:not([class*="deckCard"]),
+[data-theme="light"] [class*="archCard"]:not([class*="deckCard"]) {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border-color: rgba(217, 119, 6, 0.3) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07) !important;
+}
+
+/* Card Titles & Hindi Titles in Light Mode */
+[data-theme="light"] .card h1,
+[data-theme="light"] .card h2,
+[data-theme="light"] .card h3,
+[data-theme="light"] .card h4,
+[data-theme="light"] .card h5,
+[data-theme="light"] .card h6,
+[data-theme="light"] .card-body h1,
+[data-theme="light"] .card-body h2,
+[data-theme="light"] .card-body h3,
+[data-theme="light"] .card-body h4,
+[data-theme="light"] .card-body h5,
+[data-theme="light"] .card-body h6,
+[data-theme="light"] .card-body .text-white,
+[data-theme="light"] .card-body .text-light,
+[data-theme="light"] .card .text-white,
+[data-theme="light"] .card .text-light {
+  color: #111827 !important;
+}
+
+[data-theme="light"] .card-body .text-warning,
+[data-theme="light"] .card .text-warning {
+  color: #d97706 !important;
+}
+
+/* Typography & Colors for General Light Mode Content */
+[data-theme="light"]
+  h1:not([class*="cardContent"] *):not(.force-white-text):not(
+    .place-card-title
+  ),
+[data-theme="light"]
+  h2:not([class*="cardContent"] *):not(.force-white-text):not(
+    .place-card-title
+  ),
+[data-theme="light"]
+  h3:not([class*="cardContent"] *):not(.force-white-text):not(
+    .place-card-title
+  ),
+[data-theme="light"]
+  h4:not([class*="cardContent"] *):not(.force-white-text):not(
+    .place-card-title
+  ),
+[data-theme="light"]
+  h5:not([class*="cardContent"] *):not(.force-white-text):not(
+    .place-card-title
+  ),
+[data-theme="light"]
+  h6:not([class*="cardContent"] *):not(.force-white-text):not(
+    .place-card-title
+  ) {
+  color: #111827 !important;
+}
+
+/* Force White Text Rule (Overrides Light Mode Theme) */
+.force-white-text,
+[data-theme="light"] .force-white-text,
+[data-theme="light"] h1.force-white-text,
+[data-theme="light"] h2.force-white-text,
+[data-theme="light"] h3.force-white-text,
+[data-theme="light"] p.force-white-text,
+[data-theme="light"] span.force-white-text {
+  color: #ffffff !important;
+}
+
+[data-theme="light"] p:not([class*="cardContent"] *):not(.force-white-text):not(footer *):not(.site-footer *),
+[data-theme="light"] label:not(footer *):not(.site-footer *),
+[data-theme="light"] .text-gray-400:not([class*="cardContent"] *):not(footer *):not(.site-footer *),
+[data-theme="light"] .text-gray-300:not([class*="cardContent"] *):not(footer *):not(.site-footer *),
+[data-theme="light"] .text-secondary:not([class*="cardContent"] *):not(footer *):not(.site-footer *),
+[data-theme="light"] .text-muted:not([class*="cardContent"] *):not(footer *):not(.site-footer *) {
+  color: #374151 !important;
+}
+
+[data-theme="light"] .text-warning {
+  color: #d97706 !important;
+}
+
+[data-theme="light"] .text-info {
+  color: #2563eb !important;
+}
+
+[data-theme="light"] .text-success {
+  color: #059669 !important;
+}
+
+[data-theme="light"] .text-danger {
+  color: #dc2626 !important;
+}
+
+/* PRESERVE PURE WHITE TEXT ON HERO VIDEO CAROUSEL & IMAGE DECK CARDS */
+[data-theme="light"] .hero-carousel-container h1,
+[data-theme="light"] .hero-carousel-container p,
+[data-theme="light"] .hero-carousel-container span,
+[data-theme="light"] .hero-carousel-container div,
+[data-theme="light"] .hero-carousel-container .text-white,
+[data-theme="light"] .hero-carousel-container .text-light,
+[data-theme="light"] [class*="deckCard"] h3,
+[data-theme="light"] [class*="deckCard"] p,
+[data-theme="light"] [class*="cardContent"] h3,
+[data-theme="light"] [class*="cardContent"] p {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9) !important;
+}
+
+[data-theme="light"] .hero-carousel-container .text-warning,
+[data-theme="light"] [class*="deckCard"] .text-warning,
+[data-theme="light"] [class*="cardContent"] .text-warning {
+  color: #fbbf24 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Borders */
+[data-theme="light"] .border-secondary,
+[data-theme="light"] .border-dark,
+[data-theme="light"] [class*="border-opacity"] {
+  border-color: #e5e7eb !important;
+}
+
+/* Navbar Bottom Corners Rounded Only */
+.navbar {
+  border-radius: 0 0 24px 24px !important;
+}
+
+/* Navbar Slide Down Animation when appearing past hero section */
+@keyframes navbarSlideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.navbar-appear-fixed {
+  animation: navbarSlideDown 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-theme="light"] .border-warning {
+  border-color: rgba(217, 119, 6, 0.4) !important;
+}
+
+/* Navbar & Nav Links in Light Mode */
+[data-theme="light"] .navbar:not(.bg-transparent),
+[data-theme="light"] .navbar.shadow-lg {
+  background-color: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Transparent Navbar in Light Mode ON HOME PAGE ONLY = WHITE TEXT & NO BORDER OVER HERO */
+[data-theme="light"] .navbar.is-home-page.bg-transparent {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Brand Highlight Golden Yellow Color Protection Across All Pages & Themes */
+.brand-highlight,
+.navbar .navbar-brand .brand-highlight,
+[data-theme="light"] .navbar .navbar-brand .brand-highlight,
+[data-theme="light"]
+  .navbar.is-home-page.bg-transparent
+  .navbar-brand
+  .brand-highlight,
+[data-theme="light"] .navbar.is-inner-page .navbar-brand .brand-highlight {
+  color: #facc15 !important;
+}
+
+[data-theme="light"] .navbar.is-home-page.bg-transparent .nav-link,
+[data-theme="light"]
+  .navbar.is-home-page.bg-transparent
+  .navbar-brand
+  span:not(.brand-highlight),
+[data-theme="light"] .navbar.is-home-page.bg-transparent .text-light,
+[data-theme="light"] .navbar.is-home-page.bg-transparent .text-white,
+[data-theme="light"]
+  .navbar.is-home-page.bg-transparent
+  button:not(.btn-warning):not(.btn-danger) {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Navbar Universal Hover Bright Yellow Text Accent */
+.navbar .nav-link,
+.navbar-nav .nav-link,
+.navbar-brand,
+.hover-text-warning {
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease !important;
+}
+
+.navbar a:hover,
+.navbar a:hover *,
+.navbar .nav-link:hover,
+.navbar .nav-link:hover *,
+.navbar-brand:hover,
+.navbar-brand:hover *,
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:hover *,
+.hover-text-warning:hover,
+.dropdown-item:hover,
+.dropdown-item:hover *,
+[data-theme="light"] .navbar a:hover,
+[data-theme="light"] .navbar a:hover *,
+[data-theme="light"] .navbar .nav-link:hover,
+[data-theme="light"] .navbar .nav-link:hover *,
+[data-theme="light"] .navbar-brand:hover,
+[data-theme="light"] .navbar-brand:hover *,
+[data-theme="light"] .navbar-nav .nav-link:hover,
+[data-theme="light"] .navbar-nav .nav-link:hover *,
+[data-theme="light"] .hover-text-warning:hover,
+[data-theme="light"] .dropdown-item:hover,
+[data-theme="light"] .dropdown-item:hover * {
+  color: #facc15 !important;
+  transition: color 0.2s ease-in-out !important;
+}
+
+/* Ensure Hotel Banner Title over Dark Image Overlay remains crisp white in both Light and Dark mode */
+.hotel-overlay-title,
+[data-theme="light"] .hotel-overlay-title,
+[data-theme="light"] h2.hotel-overlay-title,
+[data-theme="light"] h3.hotel-overlay-title {
+  color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Transparent / Scrolled Navbar in Light Mode ON INNER PAGES = BLACK TEXT */
+[data-theme="light"] .navbar.is-inner-page .nav-link,
+[data-theme="light"]
+  .navbar.is-inner-page
+  .navbar-brand
+  span:not(.brand-highlight),
+[data-theme="light"] .navbar.is-inner-page .text-light,
+[data-theme="light"] .navbar.is-inner-page .text-white,
+[data-theme="light"]
+  .navbar.is-inner-page
+  button:not(.btn-warning):not(.btn-danger),
+[data-theme="light"] .navbar:not(.bg-transparent) .nav-link,
+[data-theme="light"]
+  .navbar:not(.bg-transparent)
+  .navbar-brand
+  span:not(.brand-highlight),
+[data-theme="light"]
+  .navbar:not(.bg-transparent)
+  button:not(.btn-warning):not(.btn-danger) {
+  color: #111827 !important;
+  font-weight: 600 !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .navbar-collapse.show {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(217, 119, 6, 0.25) !important;
+}
+
+[data-theme="light"] .navbar-collapse.show .nav-link,
+[data-theme="light"]
+  .navbar-collapse.show
+  .navbar-brand
+  span:not(.brand-highlight) {
+  color: #111827 !important;
+  text-shadow: none !important;
+}
+
+/* Light Mode More Dropdown Box */
+[data-theme="light"] [class*="navbar-more-dropdown"],
+[data-theme="light"] [class*="navbar-more-popover"],
+[data-theme="light"] .nav-item .motion-div,
+[data-theme="light"] .nav-item div[style*="width: 235px"],
+[data-theme="light"] .nav-item div[style*="width:235px"] {
+  background-color: #ffffff !important;
+  border: 1px solid rgba(217, 119, 6, 0.3) !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12) !important;
+}
+
+[data-theme="light"] .navbar-more-popover *,
+[data-theme="light"] .navbar-more-popover span,
+[data-theme="light"] .navbar-more-popover .text-white,
+[data-theme="light"] .navbar.is-home-page.bg-transparent .navbar-more-popover *,
+[data-theme="light"]
+  .navbar.is-home-page.bg-transparent
+  .navbar-more-popover
+  span,
+[data-theme="light"]
+  .navbar.is-home-page.bg-transparent
+  .navbar-more-popover
+  .text-white {
+  color: #111827 !important;
+  text-shadow: none !important;
+}
+
+/* Light Mode Chatbot AI Guide Widget Overrides */
+.chatbot-messages-body {
+  background-color: #111111;
+}
+
+.chatbot-backdrop-overlay,
+[data-theme="light"] .chatbot-backdrop-overlay {
+  background-color: rgba(0, 0, 0, 0.45) !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+[data-theme="light"] .chatbot-modal-container,
+[data-theme="light"] [class*="chatbot-modal-container"],
+[data-theme="light"] div[style*="height: 540px"],
+[data-theme="light"] div[style*="height:540px"] {
+  background-color: #ffffff !important;
+  border-color: rgba(217, 119, 6, 0.3) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .chatbot-messages-body {
+  background-color: #ffffff !important;
+}
+
+[data-theme="light"] .chatbot-modal-container h6,
+[data-theme="light"] .chatbot-modal-container p,
+[data-theme="light"] .chatbot-modal-container span,
+[data-theme="light"] .chatbot-modal-container div:not(.bg-warning) {
+  color: #111827 !important;
+}
+
+[data-theme="light"] .chatbot-modal-container .text-secondary {
+  color: #4b5563 !important;
+}
+
+[data-theme="light"] .chatbot-modal-container .text-warning {
+  color: #d97706 !important;
+}
+
+[data-theme="light"] .chatbot-modal-container .bg-dark {
+  background-color: #f1f5f9 !important;
+  color: #111827 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .chatbot-modal-container .bg-black {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] .chatbot-modal-container input {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border-color: #d1d5db !important;
+}
+
+[data-theme="light"] .user-profile-header-card h2,
+[data-theme="light"] .user-profile-header-card p,
+[data-theme="light"] .user-profile-header-card span,
+[data-theme="light"] .user-profile-header-card div,
+[data-theme="light"] [style*="linear-gradient(135deg, #0d0d0d"] h2,
+[data-theme="light"] [style*="linear-gradient(135deg, #0d0d0d"] p,
+[data-theme="light"] [style*="linear-gradient(135deg, #0d0d0d"] span,
+[data-theme="light"] [style*="linear-gradient(135deg, #0d0d0d"] div {
+  color: #1e1b4b !important;
+}
+
+[data-theme="light"] .user-profile-header-card .text-warning,
+[data-theme="light"] [style*="linear-gradient(135deg, #0d0d0d"] .text-warning {
+  color: #b45309 !important;
+}
+
+[data-theme="light"] .user-profile-header-card .text-secondary,
+[data-theme="light"]
+  [style*="linear-gradient(135deg, #0d0d0d"]
+  .text-secondary {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .user-profile-header-card .badge,
+[data-theme="light"] [style*="linear-gradient(135deg, #0d0d0d"] .badge {
+  background-color: #ffffff !important;
+  color: #b45309 !important;
+  border: 1px solid #fcd34d !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Light Mode VIP Privileges, Sacred Aartis & Local Events Inclusions Box Overrides */
+[data-theme="light"] [class*="bg-black"][class*="bg-opacity"],
+[data-theme="light"] [class*="bg-dark"][class*="bg-opacity"],
+[data-theme="light"] .bg-black.bg-opacity-60,
+[data-theme="light"] .bg-black.bg-opacity-75,
+[data-theme="light"] .bg-black.bg-opacity-80,
+[data-theme="light"] .bg-black.bg-opacity-85,
+[data-theme="light"] .bg-dark.bg-opacity-90,
+[data-theme="light"] .modal-body .bg-dark,
+[data-theme="light"] .modal-body .bg-black {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+  border-color: #e5e7eb !important;
+}
+
+[data-theme="light"] [class*="bg-black"][class*="bg-opacity"] span,
+[data-theme="light"] [class*="bg-black"][class*="bg-opacity"] div,
+[data-theme="light"] [class*="bg-black"][class*="bg-opacity"] p,
+[data-theme="light"] [class*="bg-dark"][class*="bg-opacity"] span,
+[data-theme="light"] [class*="bg-dark"][class*="bg-opacity"] div,
+[data-theme="light"] [class*="bg-dark"][class*="bg-opacity"] p,
+[data-theme="light"] .bg-black.bg-opacity-80 span,
+[data-theme="light"] .bg-black.bg-opacity-80 div,
+[data-theme="light"] .modal-body .text-white,
+[data-theme="light"] .modal-body .text-light,
+[data-theme="light"] .modal-body span,
+[data-theme="light"] .modal-body p,
+[data-theme="light"] .modal-body div,
+[data-theme="light"] .modal-body strong,
+[data-theme="light"] .modal-body h1,
+[data-theme="light"] .modal-body h2,
+[data-theme="light"] .modal-body h3,
+[data-theme="light"] .modal-body h4,
+[data-theme="light"] .modal-body h5,
+[data-theme="light"] .modal-body h6 {
+  color: #111827 !important;
+}
+
+[data-theme="light"] .modal-body .text-secondary,
+[data-theme="light"] .modal-body .text-muted,
+[data-theme="light"] .modal-body small {
+  color: #374151 !important;
+}
+
+[data-theme="light"] [class*="bg-black"][class*="bg-opacity"] .text-warning,
+[data-theme="light"] [class*="bg-dark"][class*="bg-opacity"] .text-warning,
+[data-theme="light"] .bg-black.bg-opacity-80 .text-warning,
+[data-theme="light"] .modal-body .text-warning {
+  color: #d97706 !important;
+}
+
+/* Light Mode Filter Buttons & Outline Buttons */
+[data-theme="light"] .btn-outline-secondary,
+[data-theme="light"] .btn-outline-secondary.text-light {
+  color: #1f2937 !important;
+  border-color: #cbd5e1 !important;
+  background-color: #ffffff !important;
+}
+
+[data-theme="light"] .btn-outline-secondary:hover {
+  background-color: #f1f5f9 !important;
+  color: #111827 !important;
+}
+
+/* Light Mode General Text Light Overrides */
+[data-theme="light"] .text-light,
+[data-theme="light"] .text-light.opacity-80,
+[data-theme="light"] .text-light.opacity-90,
+[data-theme="light"] .text-light.opacity-75,
+[data-theme="light"] .text-secondary {
+  color: #1f2937 !important;
+  opacity: 1 !important;
+}
+
+[data-theme="light"] .nav-link:hover {
+  color: #d97706 !important;
+}
+
+/* Light Mode Tab Selector Pills & Unselected Buttons */
+[data-theme="light"] .p-1\.5.bg-dark,
+[data-theme="light"] div[class*="bg-dark"].rounded-pill {
+  background-color: #e2e8f0 !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] button.btn-dark,
+[data-theme="light"] .btn-dark:not(.btn-warning):not(.badge) {
+  background-color: transparent !important;
+  color: #334155 !important;
+  border: none !important;
+}
+
+[data-theme="light"] button.btn-dark:hover,
+[data-theme="light"] .btn-dark:not(.btn-warning):hover {
+  color: #0f172a !important;
+  background-color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Hero Carousel Controls in Light Mode override */
+[data-theme="light"] .hero-carousel-control-btn {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+[data-theme="light"] .hero-carousel-control-btn:hover {
+  background-color: rgba(255, 255, 255, 0.45) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] button.btn-warning {
+  background-color: #f59e0b !important;
+  color: #000000 !important;
+}
+
+/* Get Started Button Bright Yellow Override */
+.btn-get-started,
+[data-theme="light"] button.btn-get-started,
+[data-theme="light"] .btn-get-started {
+  background-color: #ffd700 !important;
+  background: #ffd700 !important;
+  color: #000000 !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(255, 215, 0, 0.45) !important;
+}
+
+.btn-get-started:hover,
+.btn-get-started:hover *,
+.btn-get-started:hover span,
+[data-theme="light"] button.btn-get-started:hover,
+[data-theme="light"] button.btn-get-started:hover *,
+[data-theme="light"] .btn-get-started:hover,
+[data-theme="light"] .btn-get-started:hover * {
+  background-color: #f59e0b !important;
+  background: #f59e0b !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.65) !important;
+}
+
+/* Navbar User Account Button Hover State */
+.navbar-user-account-btn:hover,
+.navbar-user-account-btn:hover *,
+.navbar-user-account-btn:hover span,
+.navbar-user-account-btn:hover svg,
+.navbar-user-account-btn:hover svg path,
+.navbar-user-account-btn:hover svg circle {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+/* Mobile App Showcase Section Light Mode High Contrast Overrides */
+.mobile-app-section,
+[data-theme="light"] section.mobile-app-section {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+.mobile-app-section h2,
+[data-theme="light"] .mobile-app-section h2 {
+  color: #0f172a !important;
+}
+
+.mobile-app-section p,
+[data-theme="light"] .mobile-app-section p {
+  color: #475569 !important;
+}
+
+.mobile-app-section span:not(.darshi-text),
+[data-theme="light"] .mobile-app-section span:not(.darshi-text) {
+  color: #0f172a;
+}
+
+.mobile-app-section span.darshi-text,
+[data-theme="light"] .mobile-app-section span.darshi-text {
+  color: #facc15 !important;
+}
+
+/* Site Footer Image Background with Balanced Black Overlay */
+footer,
+.site-footer,
+[data-theme="light"] footer,
+[data-theme="light"] .site-footer {
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.48) 0%, rgba(0, 0, 0, 0.68) 100%), url('/footer_bg.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+footer h3,
+footer h4,
+footer h5,
+.site-footer h3,
+.site-footer h4,
+.site-footer h5,
+[data-theme="light"] footer h3,
+[data-theme="light"] footer h4,
+[data-theme="light"] footer h5,
+[data-theme="light"] .site-footer h3,
+[data-theme="light"] .site-footer h4,
+[data-theme="light"] .site-footer h5 {
+  color: #ffffff !important;
+}
+
+footer p,
+footer div,
+footer li,
+footer a,
+footer span,
+.site-footer span,
+[data-theme="light"] footer p,
+[data-theme="light"] footer div,
+[data-theme="light"] footer li,
+[data-theme="light"] footer a,
+[data-theme="light"] footer span:not(.footer-brand-bharat):not(.footer-brand-darshi),
+[data-theme="light"] .site-footer p,
+[data-theme="light"] .site-footer div,
+[data-theme="light"] .site-footer li,
+[data-theme="light"] .site-footer a,
+[data-theme="light"] .site-footer span:not(.footer-brand-bharat):not(.footer-brand-darshi) {
+  color: #ffffff !important;
+}
+
+/* Footer Brand Name Text Colors */
+.footer-brand-bharat,
+.site-footer .footer-brand-bharat,
+[data-theme="light"] .site-footer .footer-brand-bharat {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.footer-brand-darshi,
+.site-footer .footer-brand-darshi,
+[data-theme="light"] .site-footer .footer-brand-darshi {
+  color: #facc15 !important;
+  -webkit-text-fill-color: #facc15 !important;
+}
+
+footer a:hover,
+.site-footer a:hover,
+[data-theme="light"] footer a:hover,
+[data-theme="light"] .site-footer a:hover {
+  color: #facc15 !important;
+}
+
+/* Social Media Icon Specific Hover Brand Colors */
+.site-footer a.social-icon-fb:hover,
+[data-theme="light"] .site-footer a.social-icon-fb:hover {
+  color: #1877f2 !important;
+}
+.site-footer a.social-icon-tw:hover,
+[data-theme="light"] .site-footer a.social-icon-tw:hover {
+  color: #38bdf8 !important;
+}
+.site-footer a.social-icon-ig:hover,
+[data-theme="light"] .site-footer a.social-icon-ig:hover {
+  color: #ec4899 !important;
+}
+.site-footer a.social-icon-yt:hover,
+[data-theme="light"] .site-footer a.social-icon-yt:hover {
+  color: #ff0000 !important;
+}
+.site-footer a.social-icon-li:hover,
+[data-theme="light"] .site-footer a.social-icon-li:hover {
+  color: #1877f2 !important;
+}
+
+/* App Download Badges Brand Hover Colors */
+.btn-google-play {
+  background-color: rgba(0, 0, 0, 0.65) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+  transition: all 0.25s ease-in-out !important;
+}
+.btn-google-play:hover,
+.site-footer .btn-google-play:hover {
+  background-color: #01875f !important;
+  border-color: #01875f !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(1, 135, 95, 0.4) !important;
+}
+
+.btn-app-store {
+  background-color: rgba(0, 0, 0, 0.65) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #ffffff !important;
+  transition: all 0.25s ease-in-out !important;
+}
+.btn-app-store:hover,
+.site-footer .btn-app-store:hover {
+  background-color: #0071e3 !important;
+  border-color: #0071e3 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.4) !important;
+}
+
+/* Auth Modal Left Banner Text Light Mode Overrides */
+.auth-modal-banner-content,
+.auth-modal-banner-content h3,
+.auth-modal-banner-content p,
+.auth-modal-banner-content span:not(.badge),
+[data-theme="light"] .auth-modal-banner-content,
+[data-theme="light"] .auth-modal-banner-content h3,
+[data-theme="light"] .auth-modal-banner-content p,
+[data-theme="light"] .auth-modal-banner-content span:not(.badge) {
+  color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95) !important;
+}
+
+.auth-modal-banner-content .badge,
+[data-theme="light"] .auth-modal-banner-content .badge {
+  background-color: #f59e0b !important;
+  color: #000000 !important;
+  text-shadow: none !important;
+}
+
+/* Tables & Striped Alternate Rows in Light Mode */
+[data-theme="light"] table,
+[data-theme="light"] .table,
+[data-theme="light"] table.table-dark,
+[data-theme="light"] .table-dark {
+  --bs-table-bg: #ffffff !important;
+  --bs-table-color: #0f172a !important;
+  --bs-table-striped-bg: #f8fafc !important;
+  --bs-table-striped-color: #0f172a !important;
+  --bs-table-active-bg: #f1f5f9 !important;
+  --bs-table-active-color: #0f172a !important;
+  --bs-table-hover-bg: #f1f5f9 !important;
+  --bs-table-hover-color: #0f172a !important;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .table-warning,
+[data-theme="light"] thead.table-warning,
+[data-theme="light"] table thead.table-warning,
+[data-theme="light"] table thead.table-warning tr,
+[data-theme="light"] table thead.table-warning th,
+[data-theme="light"] .table-dark thead.table-warning th {
+  background-color: #fef3c7 !important;
+  color: #78350f !important;
+}
+
+[data-theme="light"] table.table-dark tbody tr,
+[data-theme="light"] table.table-dark tbody tr td,
+[data-theme="light"] .table-dark tbody tr,
+[data-theme="light"] .table-dark tbody tr td,
+[data-theme="light"] .table tbody tr td {
+  background-color: transparent !important;
+  color: #0f172a !important;
+  border-color: #e2e8f0 !important;
+}
+
+[data-theme="light"] table.table-dark tbody tr:nth-of-type(odd),
+[data-theme="light"] table.table-dark tbody tr:nth-of-type(odd) td,
+[data-theme="light"] .table-dark.table-striped tbody tr:nth-of-type(odd),
+[data-theme="light"] .table-dark.table-striped tbody tr:nth-of-type(odd) td {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] table.table-dark tbody tr:nth-of-type(even),
+[data-theme="light"] table.table-dark tbody tr:nth-of-type(even) td,
+[data-theme="light"] .table-dark.table-striped tbody tr:nth-of-type(even),
+[data-theme="light"] .table-dark.table-striped tbody tr:nth-of-type(even) td {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .table-dark *,
+[data-theme="light"] .table-dark td *,
+[data-theme="light"] .table-dark tr * {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .table-dark td.text-warning,
+[data-theme="light"] .table td.text-warning,
+[data-theme="light"] .table-dark td .text-warning,
+[data-theme="light"] .table-dark .text-warning {
+  color: #d97706 !important;
+}
+
+[data-theme="light"] .table-dark td.text-white,
+[data-theme="light"] .table td.text-white,
+[data-theme="light"] .table-dark td .text-white,
+[data-theme="light"] .table-dark .text-white {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .table-dark td .badge,
+[data-theme="light"] .table-dark td .badge.bg-black,
+[data-theme="light"] .table td .badge {
+  background-color: #f1f5f9 !important;
+  color: #d97706 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+/* Form Inputs & Selects */
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea,
+[data-theme="light"] .form-control,
+[data-theme="light"] .form-select {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+[data-theme="light"] option {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+/* Modals & Popovers */
+[data-theme="light"] .modal-content {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border-color: rgba(217, 119, 6, 0.3) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
+[data-theme="light"] .modal-header,
+[data-theme="light"] .modal-footer {
+  background-color: #f9fafb !important;
+  border-color: #e5e7eb !important;
+}
+
+[data-theme="light"] .modal-body {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+}
+
+[data-theme="light"] .btn-close {
+  filter: none !important;
+}
+
+/* Badges */
+[data-theme="light"] .badge.bg-black,
+[data-theme="light"] .badge.bg-dark {
+  background-color: #f3f4f6 !important;
+  color: #111827 !important;
+  border: 1px solid #d1d5db !important;
+}
+
+[data-theme="light"] .badge.bg-warning {
+  background-color: #fef3c7 !important;
+  color: #92400e !important;
+  border: 1px solid #fcd34d !important;
+}
+
+/* Progress bars */
+[data-theme="light"] .progress {
+  background-color: #e5e7eb !important;
+}
+
+/* User Profile & Hotel Header Card Styling (Rich Golden Amber in Dark Mode, Soft Warm Gradient in Light Mode) */
+.user-profile-header-card {
+  background: linear-gradient(
+    135deg,
+    #1c1409 0%,
+    #362409 50%,
+    #191106 100%
+  ) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(245, 158, 11, 0.15) !important;
+}
+
+[data-theme="light"] .user-profile-header-card {
+  background: linear-gradient(135deg, #ffffff 0%, #fef3c7 100%) !important;
+  color: #111827 !important;
+  border-color: rgba(217, 119, 6, 0.4) !important;
+  box-shadow: 0 10px 30px rgba(217, 119, 6, 0.15) !important;
+}
+
+[data-theme="light"] .user-profile-header-card h1,
+[data-theme="light"] .user-profile-header-card h2,
+[data-theme="light"] .user-profile-header-card h3,
+[data-theme="light"] .user-profile-header-card h4,
+[data-theme="light"] .user-profile-header-card h5,
+[data-theme="light"] .user-profile-header-card h6,
+[data-theme="light"] .user-profile-header-card .text-white,
+[data-theme="light"] .user-profile-header-card .text-light {
+  color: #111827 !important;
+}
+
+[data-theme="light"] .user-profile-header-card p,
+[data-theme="light"] .user-profile-header-card .text-secondary {
+  color: #4b5563 !important;
+}
+
+[data-theme="light"] .user-profile-header-card .bg-dark,
+[data-theme="light"] .user-profile-header-card .bg-black {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border-color: rgba(217, 119, 6, 0.25) !important;
+}
+
+/* Footer Brand Logo & Footer Container (Dark & Light theme support) */
+.footer-brand-name {
+  color: #ffffff;
+}
+
+[data-theme="light"] .footer-brand-name {
+  color: #facc15 !important;
+}
+
+[data-theme="light"] footer .text-secondary,
+[data-theme="light"] footer a.text-secondary {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="light"] footer p,
+[data-theme="light"] .site-footer p {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+[data-theme="light"] footer .text-warning,
+[data-theme="light"] footer h6 {
+  color: #d97706 !important;
+}
+
+/* Helper class for generous card padding */
+.p-4\.5 {
+  padding: 1.75rem !important;
+}
+
+/* Physical E-Pass Ticket Card (Theme Adaptive: Rich Dark Amber in Dark Mode, Golden Cream White in Light Mode) */
+.epass-ticket-card {
+  background-color: #120f0a !important;
+  color: #ffffff !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.45) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important;
+}
+
+.epass-ticket-body {
+  background-color: #1a160e !important;
+}
+
+.epass-ticket-stub {
+  background-color: #0e0c08 !important;
+}
+
+.epass-ticket-title {
+  color: #ffffff !important;
+}
+
+.epass-ticket-label {
+  color: #9ca3af !important;
+}
+
+.epass-passenger-badge {
+  background-color: #262015 !important;
+  color: #f3f4f6 !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Light Mode Overrides for Physical E-Pass Ticket Card */
+[data-theme="light"] .epass-ticket-card {
+  background-color: #fefce8 !important;
+  color: #111827 !important;
+  border: 1.5px solid rgba(217, 119, 6, 0.45) !important;
+  box-shadow: 0 12px 30px rgba(217, 119, 6, 0.18) !important;
+}
+
+[data-theme="light"] .epass-ticket-body {
+  background-color: #ffffff !important;
+}
+
+[data-theme="light"] .epass-ticket-stub {
+  background-color: #fffbeb !important;
+}
+
+[data-theme="light"] .epass-ticket-title {
+  color: #111827 !important;
+}
+
+[data-theme="light"] .epass-ticket-label {
+  color: #4b5563 !important;
+}
+
+[data-theme="light"] .epass-passenger-badge {
+  background-color: #fef3c7 !important;
+  color: #78350f !important;
+  border: 1px solid rgba(217, 119, 6, 0.35) !important;
+  font-weight: 600 !important;
+}
+
+/* E-Pass Modal Container (Theme Adaptive for seamless scrolling in Light & Dark mode) */
+.epass-modal-content {
+  background-color: #0d0d0f !important;
+  color: #ffffff !important;
+  border: 1px solid #2d2d32 !important;
+}
+
+.epass-modal-header {
+  background-color: #000000 !important;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.25) !important;
+}
+
+.epass-modal-body {
+  background-color: #141416 !important;
+}
+
+/* Light Mode Overrides for E-Pass Modal Container */
+[data-theme="light"] .epass-modal-content {
+  background-color: #ffffff !important;
+  color: #111827 !important;
+  border: 1px solid rgba(217, 119, 6, 0.3) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="light"] .epass-modal-header {
+  background-color: #fffbeb !important;
+  border-bottom: 1px solid rgba(217, 119, 6, 0.3) !important;
+}
+
+[data-theme="light"] .epass-modal-header .modal-title,
+[data-theme="light"] .epass-modal-header h6 {
+  color: #b45309 !important;
+}
+
+[data-theme="light"] .epass-modal-header .btn-close {
+  filter: none !important;
+}
+
+[data-theme="light"] .epass-modal-body {
+  background-color: #f8fafc !important;
+}
+
+/* Explicitly strip text shadows from all Modal and E-Pass Ticket elements in Light & Dark Mode */
+.modal,
+.modal *,
+.modal-dialog,
+.modal-dialog *,
+.modal-content,
+.modal-content *,
+.modal-header,
+.modal-header *,
+.modal-body,
+.modal-body *,
+.epass-modal-content,
+.epass-modal-content *,
+.epass-ticket-card,
+.epass-ticket-card *,
+.epass-modal-body,
+.epass-modal-body *,
+.epass-ticket-body,
+.epass-ticket-body *,
+.epass-ticket-stub,
+.epass-ticket-stub *,
+.epass-passenger-badge,
+[data-theme="light"] .modal,
+[data-theme="light"] .modal *,
+[data-theme="light"] .modal-dialog,
+[data-theme="light"] .modal-dialog *,
+[data-theme="light"] .modal-content,
+[data-theme="light"] .modal-content *,
+[data-theme="light"] .modal-header,
+[data-theme="light"] .modal-header *,
+[data-theme="light"] .modal-body,
+[data-theme="light"] .modal-body *,
+[data-theme="light"] .epass-modal-content,
+[data-theme="light"] .epass-modal-content *,
+[data-theme="light"] .epass-ticket-card,
+[data-theme="light"] .epass-ticket-card *,
+[data-theme="light"] .epass-modal-body,
+[data-theme="light"] .epass-modal-body *,
+[data-theme="light"] .epass-ticket-body,
+[data-theme="light"] .epass-ticket-body *,
+[data-theme="light"] .epass-ticket-stub,
+[data-theme="light"] .epass-ticket-stub *,
+[data-theme="light"] .epass-passenger-badge {
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+/* ====================================================== */
+/* CURATED PILGRIMAGE ITINERARIES ARCHED CARDS (MINIMAL) */
+/* ====================================================== */
+.curated-itineraries-section {
+  background-color: var(--bg-main, #000000);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+[data-theme="light"] .curated-itineraries-section {
+  background-color: #f8fafc !important;
+}
+
+.curated-itineraries-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.curated-section-heading {
+  color: #ffffff;
+  transition: color 0.3s ease;
+}
+
+[data-theme="light"] .curated-section-heading {
+  color: #0f172a !important;
+}
+
+.curated-arch-card {
+  max-width: 250px;
+  margin: 0 auto;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: transparent;
+  border: none;
+}
+
+.curated-arch-card:hover {
+  transform: translateY(-8px);
+}
+
+.curated-arch-img-box {
+  width: 100%;
+  height: 310px;
+  border-radius: 130px 130px 20px 20px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+[data-theme="light"] .curated-arch-img-box {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: rgba(217, 119, 6, 0.25);
+}
+
+.curated-arch-card:hover .curated-arch-img-box {
+  box-shadow: 0 18px 40px rgba(245, 158, 11, 0.3);
+  border-color: rgba(245, 158, 11, 0.55);
+}
+
+.curated-arch-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.curated-arch-card:hover .curated-arch-img-box img {
+  transform: scale(1.07);
+}
+
+.curated-arch-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.15) 60%,
+    transparent 100%
+  );
+  transition: opacity 0.3s ease;
+}
+
+[data-theme="light"] .curated-arch-img-overlay {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, transparent 60%);
+}
+
+.curated-itinerary-title {
+  color: #ffffff;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+[data-theme="light"] .curated-itinerary-title {
+  color: #0f172a !important;
+}
+
+.curated-itinerary-sub {
+  color: #94a3b8;
+  font-size: 0.84rem;
+  transition: color 0.3s ease;
+}
+
+[data-theme="light"] .curated-itinerary-sub {
+  color: #64748b !important;
+}
