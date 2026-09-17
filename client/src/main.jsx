@@ -24,7 +24,7 @@ window.addEventListener('unhandledrejection', function(event) {
 // Configure API base URL for environment (uses env variable or defaults to production Render backend URL in build mode)
 const apiBaseUrl =
   import.meta.env.VITE_API_BASE_URL ||
-  (import.meta.env.PROD ? "https://aicte-0gje.onrender.com" : "");
+  (import.meta.env.PROD ? "https://bharatdarishi.onrender.com/" : "");
 
 if (apiBaseUrl && apiBaseUrl.trim()) {
   axios.defaults.baseURL = apiBaseUrl.trim().replace(/\/$/, "");
