@@ -75,7 +75,7 @@ export function Navbar({ onOpenAuth, onOpenPassPortal, user, onLogout }) {
     { to: "/hotels", label: "Stays" },
     { to: "/events", label: "Local Services" },
     { to: "/planner", label: "Plan Your Trip" },
-    { to: "/model-360", label: "Model 360" },
+    { to: "/model-360", label: "3D Virtual Tour" },
   ];
 
   const moreDropdownItems = [
