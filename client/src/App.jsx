@@ -15,10 +15,13 @@ import { SiteAlertTicker } from "./components/SiteAlertTicker";
 import { Footer } from "./components/Footer";
 import { ChatbotWidget } from "./components/ChatbotWidget";
 import { AuthModal } from "./components/AuthModal";
+import { UnderDevelopmentModal } from "./components/UnderDevelopmentModal";
 
 import { Home } from "./pages/Home";
 import { Temples } from "./pages/Temples";
 import { TempleDetail } from "./pages/TempleDetail";
+import { Model360 } from "./pages/Model360";
+import { ModelView } from "./pages/ModelView";
 import { CulturalEvents } from "./pages/CulturalEvents";
 import { LocalEvents } from "./pages/LocalEvents";
 import { Hotels } from "./pages/Hotels";
@@ -39,6 +42,8 @@ function MainApp() {
   const navigate = useNavigate();
   const location = useLocation();
   const isPaymentPage = location.pathname === "/payment";
+  const isModelView = location.pathname.startsWith("/model-view");
+  const hideLayout = isPaymentPage || isModelView;
 
   // Automatically scroll to top of page on route change
   useEffect(() => {
@@ -124,7 +129,7 @@ function MainApp() {
         }}
       />
       <div className="d-flex flex-column min-vh-100 bg-light text-dark">
-        {!isPaymentPage && (
+        {!hideLayout && (
           <Navbar
             onOpenAuth={handleOpenAuth}
             user={user}
@@ -145,6 +150,8 @@ function MainApp() {
               }
             />
             <Route path="/temples" element={<Temples temples={temples} />} />
+            <Route path="/model-360" element={<Model360 />} />
+            <Route path="/model-view/:slug" element={<ModelView />} />
             <Route path="/temple/:id" element={<TempleDetail />} />
             <Route path="/places" element={<Places />} />
             <Route path="/place/:id" element={<PlaceDetail />} />
@@ -238,7 +245,7 @@ function MainApp() {
           </Routes>
         </main>
 
-        {!isPaymentPage && <Footer />}
+        {!hideLayout && <Footer />}
         <ChatbotWidget />
 
         <AuthModal
@@ -247,6 +254,7 @@ function MainApp() {
           onClose={() => setShowAuthModal(false)}
           onLoginSuccess={(u) => setUser(u)}
         />
+        <UnderDevelopmentModal />
       </div>
     </>
   );
