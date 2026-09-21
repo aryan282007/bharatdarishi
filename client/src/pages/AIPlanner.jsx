@@ -875,15 +875,32 @@ export function AIPlanner({ user }) {
     }
   }, [location.state]);
 
+  // Handle browser back button closing the itinerary
+  useEffect(() => {
+    if (!location.search.includes("view=itinerary") && aiItinerary) {
+      setAiItinerary(null);
+      setItineraryError("");
+      setSelectedStates([]);
+      setSelectedInterests([]);
+      setSelectedLengths([]);
+      setSelectedLength("All");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [location.search, aiItinerary]);
+
   // Reset filters and itinerary state when planning another trip
   const handlePlanAnotherTrip = () => {
-    setAiItinerary(null);
-    setItineraryError("");
-    setSelectedStates([]);
-    setSelectedInterests([]);
-    setSelectedLengths([]);
-    setSelectedLength("All");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (location.search.includes("view=itinerary")) {
+      navigate(-1);
+    } else {
+      setAiItinerary(null);
+      setItineraryError("");
+      setSelectedStates([]);
+      setSelectedInterests([]);
+      setSelectedLengths([]);
+      setSelectedLength("All");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   const handleGenerateItinerary = async () => {
@@ -920,6 +937,9 @@ export function AIPlanner({ user }) {
 
       if (res.data && res.data.plan) {
         setAiItinerary(res.data.plan);
+        if (!location.search.includes("view=itinerary")) {
+          navigate("?view=itinerary");
+        }
         setTimeout(() => {
           itinerarySectionRef.current?.scrollIntoView({ behavior: "smooth" });
         }, 150);
@@ -1212,11 +1232,48 @@ export function AIPlanner({ user }) {
     setCarouselIndex((prev) => Math.min(maxIndex, prev + 1));
   };
 
-  const handleCardClick = (item) => {
-    if (item.type === "temple") {
-      navigate(`/temple/${item.id}`);
-    } else {
-      navigate(`/place/${item.id}`);
+  const handleCardClick = async (item) => {
+    const stateStr = item.state || "India";
+    const interestStr = item.interest || "Heritage & Culture";
+    const lengthStr = item.tripLength || "2 Days";
+
+    // Set filters to match the clicked item
+    setSelectedStates([stateStr]);
+    setSelectedInterests([interestStr]);
+    setSelectedLengths([lengthStr]);
+
+    try {
+      setIsGenerating(true);
+      setItineraryError("");
+      
+      const res = await axios.post("/api/itineraries/generate", {
+        selectedStates: [stateStr],
+        selectedInterests: [interestStr],
+        selectedLengths: [lengthStr],
+        days: lengthStr,
+      });
+
+      if (res.data && res.data.plan) {
+        // Optionally override title with specific location clicked
+        const generatedPlan = res.data.plan;
+        if (!generatedPlan.destinationTitle) {
+           generatedPlan.destinationTitle = item.locationName + " Trip";
+        }
+        setAiItinerary(generatedPlan);
+        if (!location.search.includes("view=itinerary")) {
+          navigate("?view=itinerary");
+        }
+        setTimeout(() => {
+          itinerarySectionRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 150);
+      } else {
+        setItineraryError("We couldn't generate an itinerary for this place.");
+      }
+    } catch (err) {
+      console.error("Error generating itinerary:", err);
+      setItineraryError("Unable to generate itinerary right now.");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -1679,6 +1736,10 @@ export function AIPlanner({ user }) {
                 }
                 alt={aiItinerary.destinationTitle || "Itinerary Hero"}
                 className="w-100 h-100 object-fit-cover"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&q=80&w=1200";
+                }}
               />
             </div>
 
@@ -1797,6 +1858,10 @@ export function AIPlanner({ user }) {
                         alt={`Day ${dayObj.dayNumber}`}
                         className="w-100 h-100 object-fit-cover"
                         style={{ maxHeight: "420px" }}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://curlytales.com/wp-content/uploads/2023/09/Kerala-Nipah-Virus-Govt-Declares-Containment-Zones-In-These-Villages.-Heres-All-About-It-2.jpg";
+                        }}
                       />
                     </div>
                   )}
@@ -1849,6 +1914,10 @@ export function AIPlanner({ user }) {
                               alt="Experience"
                               className="w-100 object-fit-cover"
                               style={{ height: "140px" }}
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://tse1.mm.bing.net/th/id/OIP.TsPoGpIwItxn-IVhgRNmOwHaEh?r=0&rs=1&pid=ImgDetMain&o=7&rm=3";
+                              }}
                             />
                             <div className="p-3">
                               <span className="text-danger small fw-bold d-block mb-1">
@@ -1903,7 +1972,7 @@ export function AIPlanner({ user }) {
           </div>
         )}
 
-        {!aiItinerary && (
+        {!aiItinerary && !isGenerating && (
           <>
         {/* ARCH CAPSULE CARDS SLIDING CAROUSEL TRACK */}
         <div

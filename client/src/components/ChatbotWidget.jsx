@@ -4,19 +4,19 @@ import axios from "axios";
 
 const PROMPT_BATCHES = [
   [
-    "Tell me about Bhasma Aarti timings and passes",
-    "What is the significance of Shri Mahakal Lok Corridor?",
-    "Which shrines to visit near Mahakal Temple in Ujjain?",
+    "What are the top tourist attractions in India?",
+    "Tell me about the historical sites in India.",
+    "What are some popular destinations for a cultural trip to India?"
   ],
   [
-    "How to book a stay near Mahakal Temple Gate 1?",
-    "What rituals are performed at Kal Bhairav Temple?",
-    "Tell me about Harsiddhi Mata Shaktipeeth deepstambha",
+    "How can I best experience the culture of India?",
+    "What are the must-visit places in India for a first-time visitor?",
+    "Can you recommend any traditional Indian festivals to attend?"
   ],
   [
-    "What is the historical background of Mangalnath Temple?",
-    "Guide me through a 2-day Ujjain pilgrimage route",
-    "When does Nagchandreshwar shrine open in a year?",
+    "What is the best time of year to visit India?",
+    "How do I get around India efficiently?",
+    "What should I know about Indian cuisine before visiting?"
   ],
 ];
 
@@ -157,7 +157,7 @@ export function ChatbotWidget() {
                 className="text-dark opacity-75 d-block"
                 style={{ fontSize: "0.72rem" }}
               >
-                Your AI companion for Mahakal Temple exploration
+                Your AI companion for India exploration
               </small>
             </div>
             <button
@@ -182,8 +182,7 @@ export function ChatbotWidget() {
                   className="text-secondary small mb-0 max-w-xs"
                   style={{ fontSize: "0.8rem" }}
                 >
-                  Ask me anything about Bhasma Aarti, Mahakal Lok corridor,
-                  temples, or stays in Ujjain.
+                  Ask me anything about India, its culture, history, and travel tips. I am here to assist you with your queries and provide insightful information.
                 </p>
               </div>
             ) : (
