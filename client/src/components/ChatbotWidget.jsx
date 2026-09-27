@@ -207,7 +207,15 @@ export function ChatbotWidget() {
                         lineHeight: "1.45",
                       }}
                     >
-                      {msg.content}
+                      <div dangerouslySetInnerHTML={{ __html: msg.content
+                          .replace(/&/g, '&amp;')
+                          .replace(/</g, '&lt;')
+                          .replace(/>/g, '&gt;')
+                          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                          .replace(/\n\n/g, '<br/><br/>')
+                          .replace(/\n/g, '<br/>')
+                      }} />
                     </div>
                   </div>
                 ))}

@@ -13,6 +13,9 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/custom.module.css";
+import html2pdf from "html2pdf.js";
+import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 // 6 Regions Data Structure with States
 const REGION_MAP_DATA = [
@@ -857,20 +860,51 @@ export function AIPlanner({ user }) {
   useEffect(() => {
     if (location.state?.curatedItinerary) {
       const item = location.state.curatedItinerary;
-      const matched =
-        CURATED_ITINERARIES_MAP[item.id] ||
-        Object.values(CURATED_ITINERARIES_MAP).find(
-          (c) => c.title.toLowerCase() === item.title?.toLowerCase()
-        );
+      if (item.isDynamic) {
+        const fetchDynamicItinerary = async () => {
+          setIsGenerating(true);
+          try {
+            const res = await axios.post('/api/itineraries/generate', {
+              selectedStates: [item.title],
+              selectedInterests: ['Exploration'],
+              selectedLengths: [item.days],
+              days: item.days.replace(/[^0-9]/g, '') || '3',
+            });
+            if (res.data && res.data.plan) {
+              setAiItinerary(res.data.plan);
+              setSelectedStates([item.title]);
+              setSelectedInterests(['Exploration']);
+              setSelectedLengths([item.days]);
+              if (!location.search.includes('view=itinerary')) {
+                navigate('?view=itinerary', { replace: true });
+              }
+              setTimeout(() => {
+                itinerarySectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+              }, 150);
+            }
+          } catch (err) {
+            setItineraryError('Failed to generate dynamic itinerary.');
+          } finally {
+            setIsGenerating(false);
+          }
+        };
+        fetchDynamicItinerary();
+      } else {
+        const matched =
+          CURATED_ITINERARIES_MAP[item.id] ||
+          Object.values(CURATED_ITINERARIES_MAP).find(
+            (c) => c.title.toLowerCase() === item.title?.toLowerCase()
+          );
 
-      if (matched) {
-        setAiItinerary(matched);
-        setSelectedStates(["Sikkim"]);
-        setSelectedInterests(["Heritage & Monasteries"]);
-        setSelectedLengths([item.days]);
-        setTimeout(() => {
-          itinerarySectionRef.current?.scrollIntoView({ behavior: "smooth" });
-        }, 150);
+        if (matched) {
+          setAiItinerary(matched);
+          setSelectedStates(['Sikkim']);
+          setSelectedInterests(['Heritage & Monasteries']);
+          setSelectedLengths([item.days]);
+          setTimeout(() => {
+            itinerarySectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+          }, 150);
+        }
       }
     }
   }, [location.state]);
@@ -901,6 +935,43 @@ export function AIPlanner({ user }) {
       setSelectedLength("All");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+  };
+
+  
+  const handleSaveItinerary = async () => {
+    if (!user) {
+       toast.error("Please login to save the itinerary");
+       return;
+    }
+    try {
+       const payload = {
+          userId: user._id || user.id,
+          title: aiItinerary.destinationTitle || aiItinerary.title || "My Trip",
+          region: aiItinerary.mapRegionName || "India",
+          duration: aiItinerary.days?.length ? aiItinerary.days.length + " Days" : "2 Days",
+          routeDistance: aiItinerary.routeDistance,
+          summary: aiItinerary.summaryParagraph1,
+          days: aiItinerary.days
+       };
+       await axios.post('/api/itineraries/save', payload);
+       toast.success("Itinerary saved successfully!");
+    } catch(err) {
+       toast.error("Failed to save itinerary");
+       console.error(err);
+    }
+  };
+
+  const handleGeneratePDF = () => {
+     const element = document.getElementById('itinerary-pdf-container');
+     if (!element) return;
+     const opt = {
+       margin:       0.5,
+       filename:     'BharatDarshi_Itinerary.pdf',
+       image:        { type: 'jpeg', quality: 0.98 },
+       html2canvas:  { scale: 2, useCORS: true },
+       jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+     };
+     html2pdf().set(opt).from(element).save();
   };
 
   const handleGenerateItinerary = async () => {
@@ -1695,7 +1766,7 @@ export function AIPlanner({ user }) {
         {aiItinerary && !isGenerating && (
           <div
             ref={itinerarySectionRef}
-            className="bg-white rounded-4 shadow-lg border overflow-hidden my-5 max-w-1200 mx-auto text-start position-relative"
+            id="itinerary-pdf-container" className="bg-white rounded-4 shadow-lg border overflow-hidden my-5 max-w-1200 mx-auto text-start position-relative"
           >
             {/* TOP HEADER CONTROLS BAR FOR ON-PAGE ITINERARY */}
             <div className="bg-light p-3 px-4 border-bottom d-flex flex-wrap align-items-center justify-content-between gap-3">
@@ -1833,17 +1904,15 @@ export function AIPlanner({ user }) {
                       style={{
                         width: "52px",
                         height: "52px",
-                        backgroundColor: "#0ea5e9",
-                        fontSize: "1.05rem",
+                        fontSize: "1.2rem",
+                        backgroundColor: "#0ea5e9", // fallback cyan
+                        background: "linear-gradient(135deg, #0ea5e9, #3b82f6)",
                       }}
                     >
-                      Day {dayObj.dayNumber}
+                      {dayObj.dayNumber}
                     </span>
-                    <h3
-                      className="fw-bold m-0 text-dark"
-                      style={{ fontSize: "1.65rem" }}
-                    >
-                      {dayObj.title}
+                    <h3 className="fw-bold text-dark m-0">
+                      {dayObj.title || `Day ${dayObj.dayNumber}`}
                     </h3>
                   </div>
 
@@ -1866,32 +1935,73 @@ export function AIPlanner({ user }) {
                     </div>
                   )}
 
-                  {/* Content Row: Timeline Schedule & Right Sidebar Card */}
+{/* Content Row: Timeline Schedule & Right Sidebar Card */}
                   <div className="row g-4 align-items-start">
                     {/* Timeline Sections (Morning, Afternoon, Evening) */}
                     <div className="col-12 col-lg-8">
-                      {dayObj.timeOfDaySections?.map((sec, sIdx) => (
+                      {/* Backward compatibility for old JSON format */}
+                      {dayObj.timeOfDaySections ? dayObj.timeOfDaySections.map((sec, sIdx) => (
                         <div key={sIdx} className="mb-4">
-                          <h4
-                            className="fw-bold text-dark mb-2"
-                            style={{ fontSize: "1.25rem" }}
-                          >
+                          <h4 className="fw-bold text-dark mb-2" style={{ fontSize: "1.25rem" }}>
                             {sec.timeOfDay}
                           </h4>
                           {sec.paragraphs?.map((pText, pIdx) => (
-                            <p
-                              key={pIdx}
-                              className="text-secondary leading-relaxed mb-2"
-                              style={{
-                                fontSize: "0.98rem",
-                                lineHeight: "1.65",
-                              }}
-                            >
+                            <p key={pIdx} className="text-secondary leading-relaxed mb-2" style={{ fontSize: "0.98rem", lineHeight: "1.65" }}>
                               {pText}
                             </p>
                           ))}
                         </div>
-                      ))}
+                      )) : (
+                        /* New Structured JSON Format */
+                        ['morning', 'afternoon', 'evening'].map((timeOfDay, sIdx) => {
+                          const sec = dayObj[timeOfDay];
+                          if (!sec) return null;
+                          return (
+                            <div key={sIdx} className="mb-4">
+                              <h4 className="fw-bold text-dark mb-2 text-capitalize" style={{ fontSize: "1.25rem" }}>
+                                {timeOfDay}
+                              </h4>
+                              {sec.description && (
+                                <p className="text-secondary leading-relaxed mb-3" style={{ fontSize: "0.98rem", lineHeight: "1.65" }}>
+                                  {sec.description}
+                                </p>
+                              )}
+                              {sec.activities && sec.activities.length > 0 && (
+                                <div className="d-flex flex-column gap-3 mt-3">
+                                  {sec.activities.map((act, aIdx) => (
+                                    <div key={aIdx} className="d-flex gap-3 align-items-start bg-light p-3 rounded-3 border">
+                                      <div className="text-danger fw-bold flex-shrink-0" style={{ width: '80px' }}>
+                                        {act.startTime}
+                                      </div>
+                                      <div className="flex-grow-1">
+                                        <h6 className="fw-bold text-dark mb-1">{act.name || act.title}</h6>
+                                        {act.description && 
+                                          (() => {
+                                            const desc = act.description.toLowerCase().trim();
+                                            const name = (act.name || act.title || '').toLowerCase().trim();
+                                            if (!name || !desc) return false;
+                                            
+                                            // Remove all punctuation for loose matching
+                                            const cleanDesc = desc.replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+                                            const cleanName = name.replace(/[^a-z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+                                            
+                                            // If the description is just slightly repeating the name, hide it
+                                            if (cleanDesc.includes(cleanName) && cleanDesc.length < cleanName.length + 15) {
+                                              return null;
+                                            }
+                                            return <p className="text-secondary small mb-2">{act.description}</p>;
+                                          })()
+                                        }
+
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })
+                      )}
                     </div>
 
                     {/* Right Sidebar Card: Information & Experience Photo Card */}
@@ -1907,10 +2017,10 @@ export function AIPlanner({ user }) {
                             You may enjoy →
                           </span>
                         </div>
-                        {aiItinerary.sidebarExperience && (
+                        {(aiItinerary.sidebarExperience || dayObj.recommendedExperience) && (
                           <div className="rounded-3 overflow-hidden border bg-white mt-2 shadow-xs">
                             <img
-                              src={aiItinerary.sidebarExperience.image}
+                              src={(dayObj.recommendedExperience?.image) || aiItinerary.sidebarExperience?.image}
                               alt="Experience"
                               className="w-100 object-fit-cover"
                               style={{ height: "140px" }}
@@ -1923,16 +2033,23 @@ export function AIPlanner({ user }) {
                               <span className="text-danger small fw-bold d-block mb-1">
                                 Experience
                               </span>
-                              <p className="small text-dark fw-semibold m-0 leading-snug">
-                                {aiItinerary.sidebarExperience.title}
+                              <p className="small text-dark fw-semibold m-0 leading-snug mb-2">
+                                {(dayObj.recommendedExperience?.title) || aiItinerary.sidebarExperience?.title}
                               </p>
+                              {dayObj.recommendedExperience && dayObj.recommendedExperience.id && (
+                                <Link to={`/place/${dayObj.recommendedExperience.id}`} className="btn btn-sm btn-outline-danger w-100 mt-2 rounded-pill fw-bold">
+                                  Book Experience
+                                </Link>
+                              )}
                             </div>
                           </div>
                         )}
                       </div>
                     </div>
-                  </div>
+
+
                 </div>
+                  </div>
               ))}
 
               {/* Highlights Bar */}

@@ -703,6 +703,20 @@ function TouristProfileView({ user, bookings, onCancelBooking, cancellingId }) {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const [activeTab, setActiveTab] = React.useState('profile');
+  const [itineraries, setItineraries] = React.useState([]);
+  const fetchItineraries = async () => {
+    try {
+      if (user?._id) {
+        const res = await axios.get('/api/itineraries/user/' + user._id);
+        setItineraries(res.data || []);
+      }
+    } catch(err) {
+      console.log('Failed to fetch itineraries');
+    }
+  };
+  React.useEffect(() => {
+    if (user?._id) fetchItineraries();
+  }, [user]);
   const [showEditModal, setShowEditModal] = React.useState(false);
   const [savingProfile, setSavingProfile] = React.useState(false);
   
@@ -943,7 +957,7 @@ function TouristProfileView({ user, bookings, onCancelBooking, cancellingId }) {
             {/* TABS */}
             <div className="bg-white rounded-4 shadow-sm border border-light overflow-hidden">
                <div className="d-flex border-bottom px-2">
-                 {['profile', 'bookings', 'activity', 'reviews', 'saved'].map(tab => (
+                 {['profile', 'bookings', 'itineraries', 'activity', 'reviews', 'saved'].map(tab => (
                    <button 
                      key={tab}
                      onClick={() => setActiveTab(tab)}
@@ -994,6 +1008,39 @@ function TouristProfileView({ user, bookings, onCancelBooking, cancellingId }) {
                            <h6 className="fw-bold text-dark">No Bookings Found</h6>
                            <p className="text-secondary small">You haven't made any reservations yet.</p>
                            <Link to="/hotels" className="btn btn-warning rounded-pill mt-3 fw-medium px-4">Explore Hotels</Link>
+                         </div>
+                       )}
+                     </div>
+                   </div>
+                 )}
+                 {activeTab === 'itineraries' && (
+                   <div className="row g-4">
+                     <div className="col-12">
+                       <h6 className="fw-bold text-dark mb-4 d-flex align-items-center gap-2"><MapPin size={18} className="text-muted"/> My Saved Trips</h6>
+                       {itineraries.length > 0 ? (
+                         <div className="d-flex flex-column gap-3">
+                           {itineraries.map(it => (
+                             <div key={it._id} className="rounded-4 p-3 d-flex align-items-center gap-3 bg-light booking-card w-100">
+                               <div className="flex-grow-1">
+                                 <h6 className="fw-bold text-dark mb-1">{it.title || "My Trip"}</h6>
+                                 <div className="text-secondary small mb-2 d-flex align-items-center gap-2">
+                                   <span>{it.duration || '2 Days'}</span>
+                                   <span>&bull;</span>
+                                   <span>{it.region || 'India'}</span>
+                                 </div>
+                               </div>
+                               <Link to="/ai-planner" state={{ curatedItinerary: { ...it, isSaved: true } }} className="btn btn-outline-danger rounded-pill btn-sm fw-bold px-3">
+                                 View Itinerary
+                               </Link>
+                             </div>
+                           ))}
+                         </div>
+                       ) : (
+                         <div className="text-center py-5">
+                           <Compass size={48} className="text-muted opacity-25 mb-3 mx-auto"/>
+                           <h6 className="fw-bold text-dark">No Itineraries Found</h6>
+                           <p className="text-secondary small">You haven't saved any AI generated trips yet.</p>
+                           <Link to="/ai-planner" className="btn btn-danger rounded-pill mt-3 fw-medium px-4">Plan a Trip</Link>
                          </div>
                        )}
                      </div>

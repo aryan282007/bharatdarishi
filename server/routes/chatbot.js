@@ -1,151 +1,82 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
-const dotenv = require("dotenv");
-
-/**
- * Dynamically fetch the N8N_CHAT_URL from process.env or server/.env
- */
-function getN8nUrl(req) {
-  // Check header first
-  if (req.headers["x-n8n-chat-url"] && req.headers["x-n8n-chat-url"].trim()) {
-    return req.headers["x-n8n-chat-url"].trim();
-  }
-
-  // Reload .env if present to catch live changes without requiring server restart
-  const envPath = path.resolve(__dirname, "../.env");
-  if (fs.existsSync(envPath)) {
-    try {
-      const envConfig = dotenv.parse(fs.readFileSync(envPath));
-      if (envConfig.N8N_CHAT_URL) {
-        return envConfig.N8N_CHAT_URL.trim();
-      }
-    } catch (e) {
-      // Fallback to process.env if parsing fails
-    }
-  }
-
-  return process.env.N8N_CHAT_URL ? process.env.N8N_CHAT_URL.trim() : null;
-}
-
-/**
- * Helper function to extract reply text from various n8n response payload formats
- */
-function extractN8nReply(data) {
-  if (!data) return null;
-
-  // Handle string response directly
-  if (typeof data === "string") return data;
-
-  // Handle array returned by n8n nodes e.g. [ { output: "..." } ] or [ { text: "..." } ]
-  if (Array.isArray(data) && data.length > 0) {
-    return extractN8nReply(data[0]);
-  }
-
-  // Handle JSON object returned by n8n
-  if (typeof data === "object") {
-    if (data.json) return extractN8nReply(data.json);
-
-    const possibleTextKeys = [
-      "text",
-      "output",
-      "message",
-      "reply",
-      "response",
-      "result",
-    ];
-    for (const key of possibleTextKeys) {
-      if (typeof data[key] === "string" && data[key].trim()) {
-        return data[key];
-      }
-    }
-
-    if (typeof data.body === "string") return data.body;
-    if (typeof data.data === "string") return data.data;
-  }
-
-  return null;
-}
 
 router.post("/", async (req, res) => {
-  const { message, conversationHistory, sessionId } = req.body;
+  const { message, conversationHistory } = req.body;
 
   if (!message || !message.trim()) {
     return res.status(400).json({ error: "Message content cannot be empty." });
   }
 
-  const n8nUrl = getN8nUrl(req);
+  const apiKey =
+    process.env.GEMINI_API_KEY ||
+    process.env.GOOGLE_API_KEY ||
+    process.env.API_KEY ||
+    process.env.VITE_GEMINI_API_KEY;
 
-  if (
-    !n8nUrl ||
-    n8nUrl.includes("PASTE_YOUR_N8N_URL_HERE") ||
-    n8nUrl.includes("your-n8n-instance.com") ||
-    n8nUrl.trim() === ""
-  ) {
-    return res.status(530).json({
-      error: "N8N_CHAT_URL is set to a placeholder or is not configured.",
-      reply:
-        "Please paste your real n8n production webhook URL into server/.env (N8N_CHAT_URL=...)",
+  if (!apiKey || apiKey.trim() === "" || apiKey.includes("placeholder")) {
+    return res.status(500).json({
+      error: "Gemini API Key is missing or invalid.",
+      reply: "Sorry, my AI capabilities are currently offline. Please configure a valid Gemini API key in the server.",
     });
   }
 
+  // Build conversation context
+  let historyText = "";
+  if (conversationHistory && Array.isArray(conversationHistory)) {
+    conversationHistory.slice(-5).forEach((msg) => {
+      historyText += `${msg.type === "user" ? "User" : "BharatDarshi Guide"}: ${msg.content}\n`;
+    });
+  }
+
+  const systemPrompt = `You are the 'BharatDarshi AI Guide', an expert and friendly AI companion for exploring India.
+Your goal is to assist users with their queries regarding India's culture, history, temples, tourism, and travel tips.
+Always be polite, welcoming, and deeply knowledgeable about Indian heritage.
+
+Recent Conversation History:
+${historyText}
+
+User's New Message: ${message}
+
+Respond directly to the user's new message as the BharatDarshi AI Guide.`;
+
   try {
-    const payload = {
-      message: message,
-      chatInput: message,
-      sessionId: sessionId || "mahakal-user-session",
-      history: conversationHistory || [],
-    };
-
-    const headers = {
-      "Content-Type": "application/json",
-    };
-
-    if (process.env.N8N_BEARER_TOKEN) {
-      headers["Authorization"] = `Bearer ${process.env.N8N_BEARER_TOKEN}`;
-    }
-
-    const n8nResponse = await axios.post(n8nUrl, payload, {
-      headers,
-      timeout: 45000, // 45s timeout for AI workflows
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey.trim()}`;
+    
+    const response = await fetch(geminiUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contents: [{ parts: [{ text: systemPrompt }] }] }),
     });
 
-    const replyText = extractN8nReply(n8nResponse.data);
+    if (!response.ok) {
+      console.error("Gemini Chat API HTTP Error:", response.status, await response.text());
+      return res.status(502).json({
+        error: `Gemini API returned error status ${response.status}`,
+        reply: "Sorry, I encountered an issue connecting to my brain. Please try again later.",
+      });
+    }
 
-    if (!replyText) {
+    const data = await response.json();
+    const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!candidateText) {
       return res.status(500).json({
-        error:
-          "Empty or unexpected response structure received from n8n workflow.",
-        reply: "Received an unparseable response format from n8n workflow.",
+        error: "Empty response from Gemini API.",
+        reply: "I couldn't formulate a response right now. Please ask another question.",
       });
     }
 
     return res.json({
-      reply: replyText,
+      reply: candidateText.trim(),
       success: true,
     });
   } catch (error) {
-    console.error("[n8n Chatbot Integration Error]:", error.message);
-
-    if (error.code === "ECONNABORTED") {
-      return res.status(504).json({
-        error: "n8n response timed out.",
-        reply: "The AI assistant took too long to respond. Please try again.",
-      });
-    }
-
-    if (error.response) {
-      return res.status(error.response.status || 502).json({
-        error: `n8n returned error status ${error.response.status}`,
-        reply: `n8n chatbot server returned an error (${error.response.status}). Please check your n8n workflow.`,
-      });
-    }
-
+    console.error("[Gemini Chatbot Integration Error]:", error.message);
     return res.status(502).json({
-      error: `Failed to communicate with n8n endpoint (${error.message})`,
-      reply: `Unable to connect to n8n URL (${error.message}). Please verify the N8N_CHAT_URL in server/.env.`,
+      error: `Failed to communicate with AI endpoint (${error.message})`,
+      reply: "My AI services are currently unreachable. Please try again.",
     });
   }
 });

@@ -40,6 +40,45 @@ const mpDestinations = [
   { name: 'Shivpuri', state: 'Madhya Pradesh', city: 'Shivpuri', category: 'Nature', desc: 'Known for Madhav National Park.', lat: 25.4283, lng: 77.6534, demand: 35, gap: 60, impact: 40 }
 ];
 
+
+const additionalPlaces = [
+  // Attractions for Ujjain
+  { name: 'Mahakaleshwar Jyotirlinga', state: 'Madhya Pradesh', city: 'Ujjain', category: 'Spiritual', desc: 'One of the twelve Jyotirlingas, famous for the Bhasma Aarti.', lat: 23.1827, lng: 75.7682, demand: 98, gap: 15, impact: 95, type: 'attraction' },
+  { name: 'Kal Bhairav Temple', state: 'Madhya Pradesh', city: 'Ujjain', category: 'Spiritual', desc: 'Ancient temple dedicated to Kal Bhairav, known for unique offerings.', lat: 23.1996, lng: 75.7720, demand: 85, gap: 20, impact: 80, type: 'attraction' },
+  { name: 'Ram Ghat', state: 'Madhya Pradesh', city: 'Ujjain', category: 'Heritage', desc: 'Major bathing ghat on the banks of Kshipra River.', lat: 23.1834, lng: 75.7601, demand: 70, gap: 30, impact: 65, type: 'attraction' },
+  
+  // Ujjain Experiences
+  { name: 'Bhasma Aarti Darshan', state: 'Madhya Pradesh', city: 'Ujjain', category: 'Spiritual', desc: 'Attend the sacred early morning ash ritual at Mahakaleshwar.', lat: 23.1827, lng: 75.7682, demand: 99, gap: 10, impact: 95, type: 'experience' },
+  { name: 'Shipra River Boat Ride', state: 'Madhya Pradesh', city: 'Ujjain', category: 'Nature', desc: 'A serene boat ride along the historical Ram Ghat at sunset.', lat: 23.1834, lng: 75.7601, demand: 60, gap: 40, impact: 55, type: 'experience' },
+
+  // Attractions for Bhopal
+  { name: 'Upper Lake (Bhojtal)', state: 'Madhya Pradesh', city: 'Bhopal', category: 'Nature', desc: 'Oldest man-made lake in India.', lat: 23.2393, lng: 77.3400, demand: 80, gap: 20, impact: 75, type: 'attraction' },
+  { name: 'Taj-ul-Masajid', state: 'Madhya Pradesh', city: 'Bhopal', category: 'Heritage', desc: 'One of the largest mosques in Asia.', lat: 23.2625, lng: 77.3941, demand: 75, gap: 25, impact: 70, type: 'attraction' },
+  { name: 'Sanchi Stupa', state: 'Madhya Pradesh', city: 'Raisen', category: 'Heritage', desc: 'UNESCO World Heritage Buddhist complex near Bhopal.', lat: 23.4871, lng: 77.7397, demand: 90, gap: 15, impact: 85, type: 'attraction' },
+
+  // Bhopal Experiences
+  { name: 'Upper Lake Kayaking', state: 'Madhya Pradesh', city: 'Bhopal', category: 'Nature', desc: 'Kayaking experience during the sunset.', lat: 23.2393, lng: 77.3400, demand: 65, gap: 35, impact: 60, type: 'experience' },
+  { name: 'Heritage Walk of Bhopal', state: 'Madhya Pradesh', city: 'Bhopal', category: 'Culture', desc: 'Guided tour covering Taj-ul-Masajid and old city bazaars.', lat: 23.2625, lng: 77.3941, demand: 55, gap: 45, impact: 50, type: 'experience' },
+
+  // Mandu Attractions
+  { name: 'Jahaz Mahal', state: 'Madhya Pradesh', city: 'Dhar', category: 'Heritage', desc: 'Ship Palace situated between two artificial lakes.', lat: 22.3375, lng: 75.3942, demand: 85, gap: 30, impact: 80, type: 'attraction' },
+  { name: 'Hindola Mahal', state: 'Madhya Pradesh', city: 'Dhar', category: 'Heritage', desc: 'Swinging palace known for its sloping walls.', lat: 22.3380, lng: 75.3950, demand: 75, gap: 35, impact: 70, type: 'attraction' },
+
+  // Mandu Experiences
+  { name: 'Malwa Cuisine Tasting', state: 'Madhya Pradesh', city: 'Dhar', category: 'Culture', desc: 'Experience the traditional Malwa Bafla and local delicacies.', lat: 22.3375, lng: 75.3942, demand: 60, gap: 40, impact: 65, type: 'experience' },
+  { name: 'Sunset at Roopmati Pavilion', state: 'Madhya Pradesh', city: 'Dhar', category: 'Nature', desc: 'Watch the sunset over the Narmada valley from the pavilion.', lat: 22.3169, lng: 75.3945, demand: 88, gap: 20, impact: 85, type: 'experience' },
+
+  // Khajuraho Attractions
+  { name: 'Kandariya Mahadeva Temple', state: 'Madhya Pradesh', city: 'Chhatarpur', category: 'Heritage', desc: 'Largest and most ornate Hindu temple in Khajuraho.', lat: 24.8519, lng: 79.9213, demand: 95, gap: 15, impact: 90, type: 'attraction' },
+  { name: 'Lakshmana Temple', state: 'Madhya Pradesh', city: 'Chhatarpur', category: 'Heritage', desc: 'One of the best-preserved temples known for exquisite carvings.', lat: 24.8515, lng: 79.9210, demand: 85, gap: 20, impact: 85, type: 'attraction' },
+
+  // Khajuraho Experiences
+  { name: 'Khajuraho Light & Sound Show', state: 'Madhya Pradesh', city: 'Chhatarpur', category: 'Culture', desc: 'An immersive evening show explaining the history of the temples.', lat: 24.8519, lng: 79.9213, demand: 90, gap: 10, impact: 88, type: 'experience' },
+  { name: 'Guided Temple Architecture Tour', state: 'Madhya Pradesh', city: 'Chhatarpur', category: 'Culture', desc: 'In-depth tour with an expert covering the meaning of carvings.', lat: 24.8515, lng: 79.9210, demand: 75, gap: 25, impact: 75, type: 'experience' }
+];
+
+mpDestinations.push(...additionalPlaces);
+
 async function seed() {
   if (!process.env.MONGO_URI) {
     console.error("MONGO_URI not found in .env");

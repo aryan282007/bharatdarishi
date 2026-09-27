@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 export function CuratedItineraries() {
-  const itineraries = [
+  const [itineraries, setItineraries] = useState([
     {
       id: 1,
       days: "3 Days",
@@ -32,7 +33,32 @@ export function CuratedItineraries() {
       description: "Lachen, Lachung, Gurudongmar & divine landscapes.",
       image: "/itineraries/north_sikkim.png",
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    const fetchDynamicCards = async () => {
+      try {
+        const res = await axios.get("/api/itineraries/curated-cards");
+        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
+          const hardcodedImages = [
+            "/itineraries/yuksom.png",
+            "/itineraries/pelling.png",
+            "/itineraries/ravangla.png",
+            "/itineraries/north_sikkim.png"
+          ];
+          const dynamicItineraries = res.data.map((item, index) => ({
+            ...item,
+            image: hardcodedImages[index % hardcodedImages.length],
+            isDynamic: true
+          }));
+          setItineraries(dynamicItineraries);
+        }
+      } catch (err) {
+        console.error("Failed to fetch dynamic curated cards", err);
+      }
+    };
+    fetchDynamicCards();
+  }, []);
 
   return (
     <section
@@ -95,7 +121,7 @@ export function CuratedItineraries() {
                 className="h-100 d-flex flex-column text-center"
               >
                 <Link
-                  to="/planner"
+                  to="/planner?view=itinerary"
                   state={{ curatedItinerary: item }}
                   className="text-decoration-none d-flex flex-column h-100 cursor-pointer"
                 >
