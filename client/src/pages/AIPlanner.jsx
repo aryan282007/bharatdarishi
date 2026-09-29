@@ -920,7 +920,7 @@ export function AIPlanner({ user }) {
       setSelectedLength("All");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  }, [location.search, aiItinerary]);
+  }, [location.search]);
 
   // Reset filters and itinerary state when planning another trip
   const handlePlanAnotherTrip = () => {

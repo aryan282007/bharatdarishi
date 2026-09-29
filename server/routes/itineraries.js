@@ -241,18 +241,14 @@ CRITICAL RULES:
 Make sure the "days" array has exactly ${numDays} day objects.`;
 
       async function generateWithGemini() {
+        const targetModel = "gemini-3.1-flash-lite";
+
          // 1. Try GoogleGenAI SDK (@google/genai)
         if (GoogleGenAI) {
-            const ai = new GoogleGenAI({ apiKey: apiKey.trim() });
-            const genModels = [
-                "gemini-3.6-flash",
-                "gemini-flash-latest",
-                "gemini-2.5-flash",
-            ];
-            for (const m of genModels) {
-                try {
+            try {
+                const ai = new GoogleGenAI({ apiKey: apiKey.trim() });
                 if (ai.models && typeof ai.models.generateContent === "function") {
-                    const resAI = await ai.models.generateContent({ model: m, contents: promptText });
+                    const resAI = await ai.models.generateContent({ model: targetModel, contents: promptText });
                     if (resAI.text) {
                         try {
                            return JSON.parse(resAI.text.replace(/```json|```/g, "").trim());
@@ -261,21 +257,18 @@ Make sure the "days" array has exactly ${numDays} day objects.`;
                         }
                     }
                 }
-                } catch (e) {
-                    console.error(`GoogleGenAI Error with ${m}:`, e.message);
-                }
+            } catch (e) {
+                console.error(`GoogleGenAI Error with ${targetModel}:`, e.message);
             }
         }
         
         // 2. Try GoogleGenerativeAI SDK (@google/generative-ai)
         if (GoogleGenerativeAI) {
-            const modelsToTrySDK = ["gemini-3.6-flash", "gemini-flash-latest", "gemini-2.5-flash"];
-            for (const modelName of modelsToTrySDK) {
             try {
                 const genAI = new GoogleGenerativeAI(apiKey.trim());
                 const model = genAI.getGenerativeModel({
-                model: modelName,
-                generationConfig: { temperature: 1.0, responseMimeType: "application/json" },
+                  model: targetModel,
+                  generationConfig: { temperature: 1.0, responseMimeType: "application/json" },
                 });
                 const result = await model.generateContent(promptText);
                 const candidateText = result.response?.text();
@@ -287,19 +280,13 @@ Make sure the "days" array has exactly ${numDays} day objects.`;
                      }
                 }
             } catch (e) {
-                console.error(`GoogleGenerativeAI Error with ${modelName}:`, e.message);
-            }
+                console.error(`GoogleGenerativeAI Error with ${targetModel}:`, e.message);
             }
         }
         
         // 3. Direct REST API Driver Fallback
-        const restEndpoints = [
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey.trim()}`,
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey.trim()}`,
-        ];
-        
-        for (const geminiUrl of restEndpoints) {
-            try {
+        try {
+            const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${targetModel}:generateContent?key=${apiKey.trim()}`;
             const response = await fetch(geminiUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -318,9 +305,8 @@ Make sure the "days" array has exactly ${numDays} day objects.`;
             } else {
                 console.error("REST API HTTP Error:", response.status, await response.text());
             }
-            } catch (e) {
-                console.error("REST API Fetch Error:", e.message);
-            }
+        } catch (e) {
+            console.error("REST API Fetch Error:", e.message);
         }
         return null;
       }
@@ -509,50 +495,6 @@ function buildDynamicItineraryFallback(
   };
 }
 
-// Route to generate dynamic curated cards
-router.get("/curated-cards", async (req, res) => {
-  try {
-    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.API_KEY || process.env.VITE_GEMINI_API_KEY;
-    if (!apiKey || apiKey.trim() === "" || apiKey.includes("placeholder")) {
-        throw new Error("No valid API key");
-    }
 
-    const promptText = `You are an expert AI Travel Planner for India.
-Generate exactly 4 highly attractive and diverse curated travel itinerary ideas for India. 
-Return ONLY a valid JSON array of objects. Do not include markdown tags.
-Structure:
-[
-  { "id": 1, "days": "3 Days", "title": "Jaipur Royal Trail", "description": "Explore majestic forts and vibrant bazaars." },
-  { "id": 2, "days": "5 Days", "title": "Kerala Backwaters", "description": "Relax in serene houseboats and lush greenery." }
-]`;
-
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey.trim()}`;
-    
-    const response = await fetch(geminiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] }),
-    });
-
-    if (response.ok) {
-        const data = await response.json();
-        const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (candidateText) {
-            const parsed = JSON.parse(candidateText.replace(/```json|```/g, "").trim());
-            return res.json(parsed);
-        }
-    }
-    throw new Error("Failed to fetch from Gemini");
-  } catch (err) {
-    console.error("Error generating curated cards, falling back:", err.message);
-    // Fallback to default Sikkim cards
-    res.json([
-      { id: 1, days: "3 Days", title: "Yuksom", description: "Visit Dubdi Monastery & explore ancient trails." },
-      { id: 2, days: "4 Days", title: "Pelling", description: "Explore Pemayangtse & Rabdentse ruins with stunning views." },
-      { id: 3, days: "5 Days", title: "Ravangla", description: "Breathtaking monasteries, Buddha Park & calm retreat." },
-      { id: 4, days: "7 Days", title: "North Sikkim", description: "Lachen, Lachung, Gurudongmar & divine landscapes." }
-    ]);
-  }
-});
 
 module.exports = router;

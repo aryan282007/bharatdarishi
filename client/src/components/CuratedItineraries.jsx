@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import axios from "axios";
 
 export function CuratedItineraries() {
   const [itineraries, setItineraries] = useState([
@@ -35,30 +34,7 @@ export function CuratedItineraries() {
     },
   ]);
 
-  useEffect(() => {
-    const fetchDynamicCards = async () => {
-      try {
-        const res = await axios.get("/api/itineraries/curated-cards");
-        if (res.data && Array.isArray(res.data) && res.data.length > 0) {
-          const hardcodedImages = [
-            "/itineraries/yuksom.png",
-            "/itineraries/pelling.png",
-            "/itineraries/ravangla.png",
-            "/itineraries/north_sikkim.png"
-          ];
-          const dynamicItineraries = res.data.map((item, index) => ({
-            ...item,
-            image: hardcodedImages[index % hardcodedImages.length],
-            isDynamic: true
-          }));
-          setItineraries(dynamicItineraries);
-        }
-      } catch (err) {
-        console.error("Failed to fetch dynamic curated cards", err);
-      }
-    };
-    fetchDynamicCards();
-  }, []);
+
 
   return (
     <section

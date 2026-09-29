@@ -129,7 +129,7 @@ export function ChatbotWidget() {
               background: "#fbbf24",
               color: "#000",
             }}
-            title="Ask Mahakal AI Guide"
+            title="Ask BharatDarshi AI Guide"
           >
             <MessageCircle size={28} className="fw-bold text-dark" />
           </button>

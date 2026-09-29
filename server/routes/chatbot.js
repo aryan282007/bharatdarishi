@@ -42,7 +42,7 @@ User's New Message: ${message}
 Respond directly to the user's new message as the BharatDarshi AI Guide.`;
 
   try {
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey.trim()}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-lite:generateContent?key=${apiKey.trim()}`;
     
     const response = await fetch(geminiUrl, {
       method: "POST",
